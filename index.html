@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AIIA · Demo Reel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  /* ============ TOKENS ============ */
+  :root {
+    --bg:         #FFFFFF;
+    --bg-soft:    #F7F6F3;
+    --bg-hover:   #FAF8F5;
+    --line:       rgba(0, 0, 0, 0.09);
+    --line-2:     rgba(0, 0, 0, 0.16);
+    --text-0:     #111113;
+    --text-1:     #4A4A4E;
+    --text-2:     #8B8B90;
+    --text-3:     #B8B8BC;
+    --accent:     #D04A02;
+    --accent-2:   #E05A00;
+    --accent-soft:#FDF3ED;
+    --ease:       cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text-0);
+    font-family: 'Noto Sans KR', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+  }
+
+  /* ============ AUTH GATE ============ */
+  .gate {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+  }
+  .gate.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s var(--ease), visibility 0.5s var(--ease);
+  }
+  .gate-box {
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+  }
+  .gate-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 56px;
+  }
+  .gate-brand .brand-mark {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .gate-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    text-align: left;
+  }
+  .gate-brand-name {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    color: var(--text-0);
+  }
+  .gate-brand-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-2);
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .gate-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .gate-eyebrow-line {
+    width: 24px; height: 1px;
+    background: var(--accent);
+  }
+  .gate-title {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    color: var(--text-0);
+    margin-bottom: 14px;
+  }
+  .gate-sub {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-1);
+    margin-bottom: 40px;
+  }
+  .gate-form {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--line-2);
+    transition: border-color 0.25s var(--ease);
+  }
+  .gate-form:focus-within {
+    border-color: var(--text-0);
+  }
+  .gate-form.error {
+    border-color: var(--accent);
+    animation: shake 0.4s ease;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  .gate-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 16px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    color: var(--text-0);
+    background: transparent;
+  }
+  .gate-input::placeholder {
+    color: var(--text-3);
+    letter-spacing: 0.02em;
+  }
+  .gate-submit {
+    background: var(--text-0);
+    color: #fff;
+    border: none;
+    padding: 0 22px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.25s var(--ease);
+  }
+  .gate-submit:hover { background: var(--accent); }
+  .gate-submit svg { width: 12px; height: 12px; }
+  .gate-error {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-top: 16px;
+    height: 12px;
+    opacity: 0;
+    transition: opacity 0.2s var(--ease);
+  }
+  .gate-error.show { opacity: 1; }
+  .gate-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--text-3);
+    text-transform: uppercase;
+    margin-top: 56px;
+  }
+
+  /* ============ LAYOUT ============ */
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 56px 64px 96px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ============ HEADER ============ */
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-mark {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+  .brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+  .brand-name {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    color: var(--text-0);
+  }
+  .brand-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-2);
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .top-meta {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--text-2);
+    text-transform: uppercase;
+    line-height: 1.7;
+  }
+  .top-meta strong { color: var(--text-1); font-weight: 500; }
+  .logout-btn {
+    background: none;
+    border: none;
+    color: var(--text-3);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 4px;
+    transition: color 0.25s var(--ease);
+  }
+  .logout-btn:hover { color: var(--accent); }
+
+  /* ============ INTRO ============ */
+  .intro {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 72px 0 40px;
+    gap: 40px;
+  }
+  .intro-left { max-width: 640px; }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .eyebrow-line { width: 28px; height: 1px; background: var(--accent); }
+  .title {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 700;
+    font-size: clamp(38px, 4.4vw, 56px);
+    line-height: 1.12;
+    letter-spacing: -0.028em;
+    color: var(--text-0);
+    margin-bottom: 20px;
+  }
+  .title em { font-style: normal; color: var(--accent); }
+  .subtitle {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-1);
+    max-width: 520px;
+  }
+  .intro-right {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--text-2);
+    text-transform: uppercase;
+    padding-bottom: 8px;
+  }
+  .intro-right .count {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 44px;
+    letter-spacing: -0.02em;
+    color: var(--text-0);
+    text-transform: none;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  /* ============ LIST ============ */
+  .list-head {
+    display: grid;
+    grid-template-columns: 72px 200px 1fr 100px 40px;
+    gap: 24px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--text-0);
+    border-bottom: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--text-2);
+    text-transform: uppercase;
+    align-items: center;
+  }
+  .list-head span:nth-child(4) { text-align: right; }
+
+  .list { list-style: none; }
+  .row {
+    display: grid;
+    grid-template-columns: 72px 200px 1fr 100px 40px;
+    gap: 24px;
+    padding: 28px 20px;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.35s var(--ease), padding-left 0.4s var(--ease);
+  }
+  .row::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.4s var(--ease);
+  }
+  .row:hover { background: var(--bg-hover); padding-left: 32px; }
+  .row:hover::before { transform: scaleY(1); }
+
+  .row-num {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--text-0);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    transition: color 0.35s var(--ease);
+  }
+  .row:hover .row-num { color: var(--accent); }
+  .row-chapter { display: flex; flex-direction: column; gap: 4px; }
+  .row-chapter-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--text-2);
+    text-transform: uppercase;
+  }
+  .row-chapter-cat {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-1);
+    letter-spacing: 0.02em;
+  }
+  .row-body { display: flex; flex-direction: column; gap: 6px; padding-right: 16px; }
+  .row-title {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-0);
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+  }
+  .row-desc { font-size: 13px; color: var(--text-1); line-height: 1.55; }
+  .row-meta {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--text-2);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+  }
+  .row-meta-format {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    color: var(--text-3);
+    text-transform: uppercase;
+  }
+  .row-arrow {
+    color: var(--text-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.35s var(--ease), transform 0.4s var(--ease);
+  }
+  .row:hover .row-arrow { color: var(--accent); transform: translateX(6px); }
+  .row-arrow svg { width: 18px; height: 18px; }
+
+  /* ============ FOOTER ============ */
+  .footer {
+    margin-top: auto;
+    padding-top: 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--text-3);
+    text-transform: uppercase;
+  }
+  .footer strong { color: var(--text-2); font-weight: 500; }
+
+  /* ============ PLAYER ============ */
+  .player {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s var(--ease), visibility 0.4s var(--ease);
+  }
+  .player.open { opacity: 1; visibility: visible; }
+  .player-top {
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    z-index: 2;
+  }
+  .close-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    color: var(--text-1);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 8px 0;
+    transition: color 0.25s var(--ease);
+  }
+  .close-btn:hover { color: var(--accent); }
+  .close-btn svg { width: 14px; height: 14px; transition: transform 0.35s var(--ease); }
+  .close-btn:hover svg { transform: translateX(-3px); }
+  .player-crumb {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--text-2);
+  }
+  .player-crumb-num {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    color: var(--text-0);
+    letter-spacing: 0.05em;
+  }
+  .player-crumb-sep { width: 20px; height: 1px; background: var(--line-2); }
+  .player-crumb-title {
+    color: var(--text-0);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .player-stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    background: var(--bg-soft);
+    overflow: hidden;
+  }
+  .player-frame {
+    width: 100%;
+    max-width: 1240px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    box-shadow: 0 24px 80px -20px rgba(0, 0, 0, 0.25);
+  }
+  .player-video { width: 100%; height: 100%; display: block; background: #000; }
+  .player-bottom {
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--text-2);
+    text-transform: uppercase;
+  }
+  .player-nav { display: flex; gap: 8px; }
+  .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border: 1px solid var(--line-2);
+    background: transparent;
+    color: var(--text-1);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+  }
+  .nav-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .nav-btn svg { width: 12px; height: 12px; }
+
+  /* ============ MOBILE ============ */
+  @media (max-width: 900px) {
+    .page { padding: 32px 24px 64px; }
+    .top { flex-direction: column; gap: 16px; align-items: flex-start; }
+    .top-meta { text-align: left; }
+    .intro { flex-direction: column; align-items: flex-start; padding: 48px 0 32px; }
+    .intro-right { text-align: left; }
+    .list-head { display: none; }
+    .row {
+      grid-template-columns: 40px 1fr 20px;
+      gap: 16px;
+      padding: 20px 12px;
+      align-items: flex-start;
+    }
+    .row:hover { padding-left: 20px; }
+    .row-num { font-size: 18px; padding-top: 2px; }
+    .row-chapter, .row-meta { display: none; }
+    .row-body { padding-right: 0; }
+    .row-arrow { padding-top: 4px; }
+    .footer { flex-direction: column; align-items: flex-start; gap: 12px; padding-top: 40px; }
+    .player-top, .player-bottom { padding: 16px 20px; }
+    .player-stage { padding: 20px; }
+    .player-crumb-title { display: none; }
+    .gate-title { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ AUTH GATE ============ -->
+<div class="gate" id="gate">
+  <div class="gate-box">
+    <div class="gate-brand">
+      <div class="brand-mark"></div>
+      <div class="gate-brand-text">
+        <div class="gate-brand-name">AIIA</div>
+      </div>
+    </div>
+    <div class="gate-eyebrow">
+      <span class="gate-eyebrow-line"></span>
+      <span>Restricted Access</span>
+    </div>
+    <h1 class="gate-title">인증이 필요합니다</h1>
+    <p class="gate-sub">
+      본 콘텐츠는 사전 승인된 고객사에만 공개됩니다.<br />
+      담당자로부터 전달받은 접근 코드를 입력해 주십시오.
+    </p>
+    <form class="gate-form" id="gate-form" autocomplete="off">
+      <input
+        type="password"
+        class="gate-input"
+        id="gate-input"
+        placeholder="Access Code"
+        autofocus
+        autocomplete="off"
+      />
+      <button type="submit" class="gate-submit">
+        <span>Enter</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </form>
+    <div class="gate-error" id="gate-error">Invalid access code</div>
+    <div class="gate-note">Confidential · 2026</div>
+  </div>
+</div>
+
+<main class="page">
+
+  <!-- ============ HEADER ============ -->
+  <header class="top">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div class="brand-text">
+        <div class="brand-name">AIIA</div>
+      </div>
+    </div>
+    <div class="top-meta">
+      <div><strong>Confidential</strong> · For Client Review</div>
+      <div>Release · 2026 Q1</div>
+      <button class="logout-btn" id="logout-btn">Sign Out</button>
+    </div>
+  </header>
+
+  <!-- ============ INTRO ============ -->
+  <section class="intro">
+    <div class="intro-left">
+      <div class="eyebrow">
+        <span class="eyebrow-line"></span>
+        <span>Product Demo Reel</span>
+      </div>
+      <h1 class="title">
+        내부감사의 전 과정,<br />
+        <em>AI 기반</em>으로 재정의.
+      </h1>
+      <p class="subtitle">
+        감사 대상 선정에서 현장 조서, 리포팅, 사후관리까지 —
+        네 개의 데모 영상으로 AIIA의 실제 워크플로우를 확인하십시오.
+      </p>
+    </div>
+    <div class="intro-right">
+      <span class="count" id="total-count">04</span>
+      <span>Chapters</span>
+    </div>
+  </section>
+
+  <!-- ============ LIST ============ -->
+  <div class="list-head">
+    <span>No.</span>
+    <span>Category</span>
+    <span>Chapter</span>
+    <span>Duration</span>
+    <span></span>
+  </div>
+  <ul class="list" id="list"></ul>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div><strong>AIIA</strong></div>
+    <div>© 2026 · All Rights Reserved</div>
+  </footer>
+
+</main>
+
+<!-- ============ PLAYER ============ -->
+<div class="player" id="player">
+  <div class="player-top">
+    <button class="close-btn" id="close-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Back to Reel</span>
+    </button>
+    <div class="player-crumb">
+      <span class="player-crumb-num" id="crumb-num">01</span>
+      <span class="player-crumb-sep"></span>
+      <span class="player-crumb-title" id="crumb-title"></span>
+    </div>
+  </div>
+  <div class="player-stage">
+    <div class="player-frame">
+      <video class="player-video" id="player-video" controls playsinline></video>
+    </div>
+  </div>
+  <div class="player-bottom">
+    <div id="player-meta"></div>
+    <div class="player-nav">
+      <button class="nav-btn" id="prev-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M15 18L9 12L15 6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Prev</span>
+      </button>
+      <button class="nav-btn" id="next-btn">
+        <span>Next</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M9 6L15 12L9 18" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   ============ CONFIG: 여기 두 부분만 수정하면 됨 ================
+   ================================================================ */
+
+/* 1) 접근 코드 (SHA-256 해시)
+   ---------------------------------------------------------------
+   현재 비밀번호: PwC2026!
+   비밀번호를 바꾸려면:
+     ① 브라우저 개발자도구(F12) 콘솔 열기
+     ② 다음 실행:  hashPw('원하는비밀번호')
+     ③ 출력된 해시를 아래 PASSWORD_HASH 값에 붙여넣기 */
+const PASSWORD_HASH = '7d0c32f00c80d0a484475a7a73fcf4144159623b9e8bffa70f9d412b74d775c4';
+
+/* 2) 영상 목록 */
+const videos = [
+  {
+    src: 'video1.mp4',
+    category: 'Target Selection',
+    title: '감사 대상 선정 · AI 리스크 스코어링',
+    desc: 'ERP · 계약 · 인터뷰 데이터를 통합 분석하여 리스크 우선순위를 자동 도출.',
+    duration: '02:34'
+  },
+  {
+    src: 'video2.mp4',
+    category: 'Hypothesis',
+    title: '가설 설정 · Risk Pool 매핑',
+    desc: 'Taxonomy KPI 체계와 Risk Pool을 연결해 감사 가설을 구조화.',
+    duration: '03:12'
+  },
+  {
+    src: 'video3.mp4',
+    category: 'Fieldwork',
+    title: '현장감사 · 이슈 등록 및 조서 작성',
+    desc: 'Pass 1/Pass 2 프롬프트로 원본 데이터를 스캔하고 워크페이퍼에 자동 반영.',
+    duration: '04:08'
+  },
+  {
+    src: 'video4.mp4',
+    category: 'Reporting',
+    title: '리포팅 · 사후관리 · 제보조사',
+    desc: '감사 결과 보고, 사후관리, 별도 트랙의 제보조사 모듈까지 완결.',
+    duration: '03:45'
+  }
+];
+/* ================================================================ */
+
+/* ---------- Password helper (콘솔에서 사용) ---------- */
+window.hashPw = async (pw) => {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  const hex = [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2, '0')).join('');
+  console.log('%c' + hex, 'font-family: monospace; font-size: 13px; color: #D04A02');
+  return hex;
+};
+
+/* ---------- Auth gate ---------- */
+const gate = document.getElementById('gate');
+const gateForm = document.getElementById('gate-form');
+const gateInput = document.getElementById('gate-input');
+const gateError = document.getElementById('gate-error');
+const AUTH_KEY = 'aiia_reel_auth';
+
+async function sha256(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+
+function unlock() {
+  gate.classList.add('hidden');
+  setTimeout(() => { gate.style.display = 'none'; }, 500);
+  // 인증 후에만 딥링크 처리
+  readHash();
+}
+
+gateForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const entered = gateInput.value.trim();
+  if (!entered) return;
+  const hashed = await sha256(entered);
+  if (hashed === PASSWORD_HASH) {
+    sessionStorage.setItem(AUTH_KEY, '1');
+    unlock();
+  } else {
+    gateError.classList.add('show');
+    gateForm.classList.add('error');
+    gateInput.value = '';
+    setTimeout(() => gateForm.classList.remove('error'), 500);
+  }
+});
+
+// 이번 세션에서 이미 통과했으면 스킵
+if (sessionStorage.getItem(AUTH_KEY) === '1') {
+  gate.style.display = 'none';
+}
+
+// 로그아웃
+document.getElementById('logout-btn').addEventListener('click', () => {
+  sessionStorage.removeItem(AUTH_KEY);
+  location.reload();
+});
+
+/* ---------- App ---------- */
+const list = document.getElementById('list');
+const player = document.getElementById('player');
+const playerVideo = document.getElementById('player-video');
+const crumbNum = document.getElementById('crumb-num');
+const crumbTitle = document.getElementById('crumb-title');
+const playerMeta = document.getElementById('player-meta');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const closeBtn = document.getElementById('close-btn');
+
+document.getElementById('total-count').textContent = String(videos.length).padStart(2, '0');
+let currentIndex = 0;
+
+videos.forEach((v, i) => {
+  const li = document.createElement('li');
+  li.className = 'row';
+  li.innerHTML = `
+    <div class="row-num">${String(i + 1).padStart(2, '0')}</div>
+    <div class="row-chapter">
+      <span class="row-chapter-tag">Chapter ${String(i + 1).padStart(2, '0')}</span>
+      <span class="row-chapter-cat">${v.category}</span>
+    </div>
+    <div class="row-body">
+      <div class="row-title">${v.title}</div>
+      <div class="row-desc">${v.desc}</div>
+    </div>
+    <div class="row-meta">
+      <span>${v.duration}</span>
+      <span class="row-meta-format">MP4 · H.264</span>
+    </div>
+    <div class="row-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  `;
+  li.addEventListener('click', () => openPlayer(i));
+  list.appendChild(li);
+});
+
+function openPlayer(idx) {
+  currentIndex = idx;
+  const v = videos[idx];
+  playerVideo.src = v.src;
+  crumbNum.textContent = String(idx + 1).padStart(2, '0');
+  crumbTitle.textContent = v.title;
+  playerMeta.textContent = `${v.category} · ${v.duration} · MP4 · H.264`;
+  prevBtn.disabled = idx === 0;
+  nextBtn.disabled = idx === videos.length - 1;
+  player.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  history.replaceState(null, '', `#v${idx + 1}`);
+  playerVideo.play().catch(() => {});
+}
+
+function closePlayer() {
+  player.classList.remove('open');
+  playerVideo.pause();
+  playerVideo.removeAttribute('src');
+  playerVideo.load();
+  document.body.style.overflow = '';
+  history.replaceState(null, '', ' ');
+}
+
+prevBtn.addEventListener('click', () => { if (currentIndex > 0) openPlayer(currentIndex - 1); });
+nextBtn.addEventListener('click', () => { if (currentIndex < videos.length - 1) openPlayer(currentIndex + 1); });
+closeBtn.addEventListener('click', closePlayer);
+
+document.addEventListener('keydown', (e) => {
+  if (!player.classList.contains('open')) return;
+  if (e.key === 'Escape') closePlayer();
+  if (e.key === 'ArrowLeft'  && currentIndex > 0) openPlayer(currentIndex - 1);
+  if (e.key === 'ArrowRight' && currentIndex < videos.length - 1) openPlayer(currentIndex + 1);
+});
+
+function readHash() {
+  if (sessionStorage.getItem(AUTH_KEY) !== '1') return;
+  const m = location.hash.match(/^#v(\d+)$/);
+  if (!m) return;
+  const idx = Math.max(0, Math.min(videos.length - 1, parseInt(m[1], 10) - 1));
+  openPlayer(idx);
+}
+window.addEventListener('hashchange', readHash);
+
+// 최초 진입 시 이미 인증돼있으면 딥링크 처리
+if (sessionStorage.getItem(AUTH_KEY) === '1') readHash();
+</script>
+
+</body>
+</html>
